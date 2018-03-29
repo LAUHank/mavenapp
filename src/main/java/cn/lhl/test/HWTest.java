@@ -7,6 +7,6 @@ import cn.lhl.core.SingleDog;
  */
 public class HWTest {
     public static void main(String[] args) {
-        SingleDog sd = new SingleDog();
+        SingleDog sd = new SingleDog();//单身狗doge
     }
 }
