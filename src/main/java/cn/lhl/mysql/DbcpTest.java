@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import cn.lhl.util.CloseUtil;
 import org.apache.commons.dbcp2.BasicDataSource;
 
 
@@ -55,12 +56,7 @@ public class DbcpTest {
 	}
 
 	public static void main(String[] args) {
-		
-		try {
-			test();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		testDQL();
 	}
 	
 	public static void test() throws Exception {
@@ -86,6 +82,51 @@ public class DbcpTest {
 		pstmt.close();
 		conn.close();
 		System.out.println("done");
+	}
+
+	public static void testDQL() {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		ResultSet rs = null;
+		try {
+			conn = ds.getConnection();
+			StringBuffer sb = new StringBuffer();
+			sb.append("select id,name from test_table;");
+			stmt = conn.prepareStatement(sb.toString());
+			rs = stmt.executeQuery();
+			while (rs.next()) {
+				int id = rs.getInt("id");
+				String name = rs.getString("name");
+				System.out.println(id+"\t\t|"+name);
+				System.out.println("==================================");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			CloseUtil.close(rs);
+			CloseUtil.close(stmt);
+			CloseUtil.close(conn);
+		}
+	}
+
+	public static void testDML() {
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		try {
+			conn = ds.getConnection();
+			StringBuffer sb = new StringBuffer();
+			sb.append("insert into test_table ");
+			sb.append("(id, name) ");
+			sb.append("values (2, 'lhl2') ;");
+			stmt = conn.prepareStatement(sb.toString());
+			int res = stmt.executeUpdate();
+			System.out.println("影响表记录条数:"+res);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			CloseUtil.close(stmt);
+			CloseUtil.close(conn);
+		}
 	}
 
 }

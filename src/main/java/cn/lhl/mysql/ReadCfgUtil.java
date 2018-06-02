@@ -1,5 +1,7 @@
 package cn.lhl.mysql;
 
+import cn.lhl.util.CloseUtil;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Properties;
@@ -12,7 +14,7 @@ public class ReadCfgUtil {
 		try {
 			InputStream in = ReadCfgUtil.class.getClassLoader().getResourceAsStream(cfgPath);
 			p.load(new InputStreamReader(in, encode));
-			in.close();
+			CloseUtil.close(in);
 			System.out.println("配置文件["+cfgPath+"]加载成功");
 		} catch (Exception e) {
 			System.out.println("配置文件["+cfgPath+"]加载失败");
